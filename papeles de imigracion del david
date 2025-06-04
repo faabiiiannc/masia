@@ -1,0 +1,62 @@
+# Tres en Raya (3 en línea) - 2 jugadores en consola
+
+def imprimir_tablero(tablero):
+    for fila in tablero:
+        print(" | ".join(fila))
+        print("-" * 9)
+
+def verificar_victoria(tablero, jugador):
+    # Verificar filas, columnas y diagonales
+    for i in range(3):
+        if all([celda == jugador for celda in tablero[i]]):
+            return True
+        if all([tablero[j][i] == jugador for j in range(3)]):
+            return True
+    if tablero[0][0] == tablero[1][1] == tablero[2][2] == jugador:
+        return True
+    if tablero[0][2] == tablero[1][1] == tablero[2][0] == jugador:
+        return True
+    return False
+
+def tablero_lleno(tablero):
+    return all([celda != " " for fila in tablero for celda in fila])
+
+def tres_en_raya():
+    tablero = [[" " for _ in range(3)] for _ in range(3)]
+    jugador_actual = "X"
+
+    while True:
+        imprimir_tablero(tablero)
+        print(f"Turno del jugador {jugador_actual}")
+        
+        try:
+            fila = int(input("Ingresa la fila (0, 1, 2): "))
+            col = int(input("Ingresa la columna (0, 1, 2): "))
+        except ValueError:
+            print("Por favor, introduce números válidos.")
+            continue
+
+        if fila not in range(3) or col not in range(3):
+            print("Coordenadas fuera de rango. Intenta otra vez.")
+            continue
+
+        if tablero[fila][col] != " ":
+            print("Esa casilla ya está ocupada. Intenta otra vez.")
+            continue
+
+        tablero[fila][col] = jugador_actual
+
+        if verificar_victoria(tablero, jugador_actual):
+            imprimir_tablero(tablero)
+            print(f"¡Felicidades! El jugador {jugador_actual} ha ganado.")
+            break
+
+        if tablero_lleno(tablero):
+            imprimir_tablero(tablero)
+            print("¡Empate!")
+            break
+
+        jugador_actual = "O" if jugador_actual == "X" else "X"
+
+# Ejecutar el juego
+tres_en_raya()
